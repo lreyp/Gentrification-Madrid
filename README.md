@@ -23,6 +23,8 @@ La actividad ha sido realizada por **Lucas Rey Pitaluga**, con **Anna Muñoz Bol
 
 **analysis.py**: genera los gráficos de evolución de cada uno de los indicadores por barrio y el análisis con Kmeans.
 
-En el repositorio no está incluida la parte de datos, por lo que los ficheros CSV tanto crudos como procesados deben descargarse del siguiente enlace de [Google Drive]([url](https://drive.google.com/drive/folders/1Y0jtqGdMbPHVXBTGxPwsn_tTLsdU8tGu?usp=drive_link)https://drive.google.com/drive/folders/1Y0jtqGdMbPHVXBTGxPwsn_tTLsdU8tGu?usp=drive_link).
+En el repositorio no está incluida la parte de datos, por lo que los ficheros CSV tanto crudos como procesados deben descargarse del siguiente enlace de [Google Drive]([url](https://drive.google.com/drive/folders/1Y0jtqGdMbPHVXBTGxPwsn_tTLsdU8tGu?usp=drive)).
+
+[Google Drive]([url](https://drive.google.com/drive/folders/1Y0jtqGdMbPHVXBTGxPwsn_tTLsdU8tGu?usp=drive_link)https://drive.google.com/drive/folders/1Y0jtqGdMbPHVXBTGxPwsn_tTLsdU8tGu?usp=drive_link).
 
 Una vez descomprimido el fichero, la carpeta _data_ debe estar en la raíz del proyecto.
