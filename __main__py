@@ -1,0 +1,39 @@
+from etl.analysis import analyse_indicadores, graph_indicadores
+from etl.extract import load_data
+from etl.merge import merge_indicadores
+from etl.transform import transform_locales, transform_padron, transform_policia, \
+    transform_renta, transform_vivienda, transform_poblacion
+
+if __name__ == '__main__':
+
+    # Folders definition
+    data = 'data'
+    locales = 'data\locales'
+    padron = 'data\padron'
+    policia = 'data\policia'
+    poblacion = 'data\poblacion'
+    renta = 'data\\renta'
+    vivienda = 'data\\vivienda'
+
+    # Extract
+    load_data(locales)
+    load_data(padron)
+    load_data(policia)
+    load_data(poblacion)
+    load_data(renta)
+    load_data(vivienda)
+
+    # Transform
+    transform_locales(locales)
+    transform_padron(padron)
+    transform_policia(policia)
+    transform_poblacion(poblacion)
+    transform_renta(renta)
+    transform_vivienda(vivienda)
+
+    # Merge an load
+    merge_indicadores(data)
+
+    # Analysis
+    graph_indicadores(data)
+    analyse_indicadores(data)
