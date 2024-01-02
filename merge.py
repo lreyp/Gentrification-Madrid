@@ -3,6 +3,7 @@ import pandas as pd
 from functools import reduce
 import numpy as np
 
+
 def merge_indicadores(folder):
     # Paths and files
     file = os.path.join(os.getcwd(), 'data\poblacion', 'poblacion_barrio_15_20.csv')
