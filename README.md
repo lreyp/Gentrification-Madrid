@@ -2,7 +2,7 @@
 
 ## Descripción
 
-En este repositorio pueden encontrar el código correspondiente al desarrollo del proyecto de final de máster en Ciencia de Datos de la UOC con título "Estudio de los procesos de gentrificaci ́on en los barrios
+En este repositorio pueden encontrar el código correspondiente al desarrollo del proyecto de final de máster en Ciencia de Datos de la UOC con título "Estudio de los procesos de gentrificación en los barrios
 de Madrid".
 
 Esta práctica se ha realizado bajo el contexto de la asignatura _Trabajo Final de Máster_, perteneciente al Máster en Ciencia de Datos de la Universitat Oberta de Catalunya.
