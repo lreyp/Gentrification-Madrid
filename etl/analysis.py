@@ -55,7 +55,9 @@ def graph_indicadores(folder):
             fig.savefig(filename)
 
             # Close the figure
-            plt.close(fig)
+            fig.clf()
+            plt.close()
+            ax.cla()
 
     print('Images have been saved.')
 
@@ -65,6 +67,12 @@ def analyse_indicadores(folder):
     file = os.path.join(os.getcwd(), folder, 'indicadores_15_20.csv')
     print('loading:', file, '...')
     df = pd.read_csv(file, sep=',', encoding='unicode_escape', header=0)
+
+    df['barrio'] = df['barrio'].replace(
+        ['LOS ANGELES', 'CONCEPCION', 'CASCO H.VALLECAS', 'CASCO H.BARAJAS', 'ARGUELLES',
+         'PEÑA GRANDE', 'CASCO H.VICALVARO', 'LAS AGUILAS', 'EL PILAR', 'PALOS DE MOGUER'],
+        ['ANGELES', 'LA CONCEPCION', 'CASCO HISTORICO DE VALLECAS', 'CASCO HISTORICO DE BARAJAS', 'ARGÜELLES',
+         'PEÑAGRANDE', 'CASCO HISTORICO DE VICALVARO', 'AGUILAS', 'PILAR', 'PALOS DE LA FRONTERA'])
 
     dataset = df.copy()
 
@@ -129,7 +137,9 @@ def analyse_indicadores(folder):
     fig.savefig(filename)
 
     # Close the figure
-    plt.close(fig)
+    fig.clf()
+    plt.close()
+    ax.cla()
 
     lista = [4]
     [df2.pop(x) for x in lista]
@@ -155,7 +165,9 @@ def analyse_indicadores(folder):
     fig.savefig(filename)
 
     # Close the figure
-    plt.close(fig)
+    fig.clf()
+    plt.close()
+    ax.cla()
 
     print('Correlation matrixes saved.')
 
@@ -175,7 +187,9 @@ def analyse_indicadores(folder):
         #plt.show()
         filename = f"images/analysis/elbow.png"
         fig.savefig(filename)
-        plt.close(fig)
+        fig.clf()
+        plt.close()
+        axis.cla()
 
     def plot_silhouette(sils, ks):
         fig, axis = plt.subplots(figsize=(8, 6))
@@ -187,7 +201,9 @@ def analyse_indicadores(folder):
         #plt.show()
         filename = f"images/analysis/silhouette.png"
         fig.savefig(filename)
-        plt.close(fig)
+        fig.clf()
+        plt.close()
+        axis.cla()
 
     def elbow_method(df):
         sse = []
@@ -214,57 +230,35 @@ def analyse_indicadores(folder):
 
     print('Kmeans methods passed.')
 
-    clusterer = KMeans(n_clusters=3, random_state=55, n_init='auto')
-    cluster_labels = clusterer.fit_predict(df2)
-    df['cluster_k3'] = cluster_labels
-    k3 = df[['barrio', 'cluster_k3']]
-    dataset_k3 = pd.merge(dataset, k3, on=['barrio'])
-    dataset_k3 = (
-        dataset_k3
-        .groupby(['year', 'cluster_k3'])
-        .agg(venta=('venta', 'mean'),
-             alquiler=('alquiler', 'mean'),
-             edad_media=('edad_media', 'mean'),
-             tamano_medio=('tamano_medio', 'mean'),
-             poblacion=('poblacion', 'mean'),
-             renta_media=('renta_media', 'mean'),
-             inmigracion=('inmigracion', 'mean'),
-             admin_publica=('admin_publica', 'mean'),
-             comercio_mayor=('comercio_mayor', 'mean'),
-             comercio_menor=('comercio_menor', 'mean'),
-             construccion=('construccion', 'mean'),
-             educacion=('educacion', 'mean'),
-             finanzas=('finanzas', 'mean'),
-             hoteles=('hoteles', 'mean'),
-             inmobiliarias=('inmobiliarias', 'mean'),
-             ocio=('ocio', 'mean'),
-             restaurantes=('restaurantes', 'mean'),
-             sanidad=('sanidad', 'mean'),
-             incidentes=('incidentes', 'mean'),
-             )
-        .reset_index()
-    )
+    df = df.drop(['edad_media', 'tamano_medio', 'poblacion'], axis=1)
+
+    indicadores = ['renta_media', 'venta', 'hoteles', 'restaurantes', 'inmigracion']
 
     if not os.path.exists(f"analysis"):
         os.mkdir(f"analysis")
-
-    dataset_k3.to_csv('analysis/dataset_clusters_3.csv', index=False)
-
-    print('Kmeans with 3 clusters saved.')
 
     clusterer = KMeans(n_clusters=4, random_state=55, n_init='auto')
     cluster_labels = clusterer.fit_predict(df2)
     df['cluster_k4'] = cluster_labels
     k4 = df[['barrio', 'cluster_k4']]
     dataset_k4 = pd.merge(dataset, k4, on=['barrio'])
+    dataset_k4.to_csv('analysis/dataset_k4.csv', index=False)
+
+    barrios_out = ['AMBROZ', 'EL CAÑAVERAL', 'VALDEBERNARDO', 'VALDERRIVAS', 'ENSANCHE DE VALLECAS']
+    dataset_k3 = dataset_k4.copy()
+    dataset_k3 = dataset_k3[~dataset_k3['barrio'].isin(barrios_out)]
+    dataset_k3 = dataset_k3.rename(columns={'cluster_k4': 'cluster_k3'})
+    dataset_k3['cluster_k3'] = dataset_k3['cluster_k3'].apply(str)
+    dataset_k3['cluster_k3'] = dataset_k3['cluster_k3'].replace(['0'], 'Sin riesgo')
+    dataset_k3['cluster_k3'] = dataset_k3['cluster_k3'].replace(['1'], 'Con riesgo')
+    dataset_k3['cluster_k3'] = dataset_k3['cluster_k3'].replace(['2'], 'Gentrificado')
+    dataset_k3.to_csv('analysis/dataset_k3.csv', index=False)
+
     dataset_k4 = (
         dataset_k4
         .groupby(['year', 'cluster_k4'])
         .agg(venta=('venta', 'mean'),
              alquiler=('alquiler', 'mean'),
-             edad_media=('edad_media', 'mean'),
-             tamano_medio=('tamano_medio', 'mean'),
-             poblacion=('poblacion', 'mean'),
              renta_media=('renta_media', 'mean'),
              inmigracion=('inmigracion', 'mean'),
              admin_publica=('admin_publica', 'mean'),
@@ -282,24 +276,57 @@ def analyse_indicadores(folder):
              )
         .reset_index()
     )
+
+    if not os.path.exists(f"images/clusters_k4"):
+        os.mkdir(f"images/clusters_k4")
+
+    for clusters in cluster_labels:
+        for indicador in indicadores:
+            df_ind_clust = dataset_k4.loc[(dataset_k4['cluster_k4'] == clusters)]
+
+            filename = f"images/clusters_k4/{clusters}_{indicador}.png"
+
+            # Plot the figure
+            fig, ax = plt.subplots()
+            df_ind_clust.plot(x='year', y=indicador, ax=ax)
+
+            # Save the figure
+            fig.savefig(filename)
+
+            # Close the figure
+            fig.clf()
+            plt.close()
+            ax.cla()
+
+    print('K4 images have been saved.')
 
     dataset_k4.to_csv('analysis/dataset_clusters_4.csv', index=False)
 
     print('Kmeans with 4 clusters saved.')
 
-    clusterer = KMeans(n_clusters=5, random_state=55, n_init='auto')
+    clusterer = KMeans(n_clusters=6, random_state=55, n_init='auto')
     cluster_labels = clusterer.fit_predict(df2)
-    df['cluster_k5'] = cluster_labels
-    k5 = df[['barrio', 'cluster_k5']]
-    dataset_k5 = pd.merge(dataset, k5, on=['barrio'])
-    dataset_k5 = (
-        dataset_k5
-        .groupby(['year', 'cluster_k5'])
+    df['cluster_k6'] = cluster_labels
+    k6 = df[['barrio', 'cluster_k6']]
+    dataset_k6 = pd.merge(dataset, k6, on=['barrio'])
+    dataset_k6.to_csv('analysis/dataset_k6.csv', index=False)
+
+    dataset_k6 = pd.read_csv(file, sep=',', encoding='unicode_escape', header=0)
+    dataset_k4b = dataset_k6.copy()
+    dataset_k4b = dataset_k4b[~dataset_k4b['barrio'].isin(barrios_out)]
+    dataset_k4b = dataset_k4b.rename(columns={'cluster_k6': 'cluster_k4b'})
+    dataset_k4b['cluster_k4b'] = dataset_k4b['cluster_k4b'].apply(str)
+    dataset_k4b['cluster_k4b'] = dataset_k4b['cluster_k4b'].replace(['0'], 'Sin riesgo')
+    dataset_k4b['cluster_k4b'] = dataset_k4b['cluster_k4b'].replace(['1'], 'Riesgo medio')
+    dataset_k4b['cluster_k4b'] = dataset_k4b['cluster_k4b'].replace(['4'], 'Riesgo alto')
+    dataset_k4b['cluster_k4b'] = dataset_k4b['cluster_k4b'].replace(['5'], 'Gentrificado')
+    dataset_k4b.to_csv('analysis/dataset_k4b.csv', index=False)
+
+    dataset_k6 = (
+        dataset_k6
+        .groupby(['year', 'cluster_k6'])
         .agg(venta=('venta', 'mean'),
              alquiler=('alquiler', 'mean'),
-             edad_media=('edad_media', 'mean'),
-             tamano_medio=('tamano_medio', 'mean'),
-             poblacion=('poblacion', 'mean'),
              renta_media=('renta_media', 'mean'),
              inmigracion=('inmigracion', 'mean'),
              admin_publica=('admin_publica', 'mean'),
@@ -318,6 +345,29 @@ def analyse_indicadores(folder):
         .reset_index()
     )
 
-    dataset_k5.to_csv('analysis/dataset_clusters_5.csv', index=False)
+    if not os.path.exists(f"images/clusters_k6"):
+        os.mkdir(f"images/clusters_k6")
 
-    print('Kmeans with 5 clusters saved.')
+    for clusters in cluster_labels:
+        for indicador in indicadores:
+            df_ind_clust = dataset_k6.loc[(dataset_k6['cluster_k6'] == clusters)]
+
+            filename = f"images/clusters_k6/{clusters}_{indicador}.png"
+
+            # Plot the figure
+            fig, ax = plt.subplots()
+            df_ind_clust.plot(x='year', y=indicador, ax=ax)
+
+            # Save the figure
+            fig.savefig(filename)
+
+            # Close the figure
+            fig.clf()
+            plt.close()
+            ax.cla()
+
+    print('K6 images have been saved.')
+
+    dataset_k6.to_csv('analysis/dataset_clusters_6.csv', index=False)
+
+    print('Kmeans with 6 clusters saved.')
