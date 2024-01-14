@@ -53,4 +53,11 @@ def merge_indicadores(folder):
                                    'Inmobiliarias': 'inmobiliarias', 'Ocio y cultura': 'ocio',
                                    'Restaurantes': 'restaurantes', 'Sanidad': 'sanidad'}, inplace=True)
 
+    df_indicadores['barrio'] = df_indicadores['barrio'].replace(
+        ['LOS ANGELES', 'CONCEPCION', 'CASCO H.VALLECAS', 'CASCO H.BARAJAS', 'ARGUELLES',
+         'PEÑA GRANDE', 'CASCO H.VICALVARO', 'LAS AGUILAS', 'EL PILAR', 'PALOS DE MOGUER'],
+        ['ANGELES', 'LA CONCEPCION', 'CASCO HISTORICO DE VALLECAS', 'CASCO HISTORICO DE BARAJAS', 'ARGÜELLES',
+         'PEÑAGRANDE', 'CASCO HISTORICO DE VICALVARO', 'AGUILAS', 'PILAR', 'PALOS DE LA FRONTERA'])
+
     df_indicadores.to_csv(os.path.join(folder, 'indicadores_15_20.csv'), encoding='latin1', index=False)
+
