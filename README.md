@@ -25,4 +25,4 @@ La actividad ha sido realizada por **Lucas Rey Pitaluga**, con **Anna Muñoz Bol
 
 En el repositorio no está incluida la parte de datos, por lo que los ficheros CSV tanto crudos como procesados deben descargarse del siguiente enlace de [Google Drive](https://drive.google.com/drive/folders/1Y0jtqGdMbPHVXBTGxPwsn_tTLsdU8tGu?usp=drive).
 
-Una vez descomprimido el fichero, la carpeta _data_ debe estar en la raíz del proyecto.
+Una vez descargados los ficheros, la carpeta _data_ debe estar en la raíz del proyecto.
