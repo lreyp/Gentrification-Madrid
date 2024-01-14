@@ -228,7 +228,7 @@ def transform_policia(folder):
                         df['POR TENENCIA DE ARMAS'] + df['POR TENENCIA DE DROGAS'] + df['POR CONSUMO DE DROGAS'])
 
     df = df.drop(['RELACIONADAS CON LAS PERSONAS', 'RELACIONADAS CON EL PATRIMONIO', 'POR TENENCIA DE ARMAS',
-                    'POR TENENCIA DE DROGAS', 'POR CONSUMO DE DROGAS'], axis=1)
+                  'POR TENENCIA DE DROGAS', 'POR CONSUMO DE DROGAS'], axis=1)
 
     df.rename(columns={"DISTRITOS": "distrito"}, inplace=True)
 
